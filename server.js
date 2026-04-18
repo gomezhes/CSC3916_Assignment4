@@ -69,7 +69,7 @@ router.post('/signin', async (req, res) => { // Use async/await
 });
 
 router.route('/reviews')
-  .get(authJwtController.isAuthenticated, async (req, res) => {
+  .get(authJwtController.isAuthenticated, async (req, res) => { 
     try {
         const reviews = await Review.find({});
         return res.json(reviews);
@@ -81,6 +81,7 @@ router.route('/reviews')
       });
     }
   })
+
   .post(authJwtController.isAuthenticated, async (req, res) => {
     try {
       const review = new Review({
@@ -114,15 +115,24 @@ router.route('/reviews')
 router.route('/movies')
   .get(authJwtController.isAuthenticated, async (req, res) => {
     try {
+      if (req.query.reviews === 'true') {
+        const moviesWithReviews = await Movie.aggregate([{
+          $lookup: {
+            from: 'reviews',
+            localField: '_id',
+            foreignField: 'movieId',
+            as: 'reviews'
+          }
+        }]);
+        return res.status(200).json(moviesWithReviews);
+      }
       const movies = await Movie.find({});
-      
-      res.status(200).json(movies); 
-      
+      res.status(200).json(movies);
     } catch (err) {
       console.error(err);
-      res.status(500).json({ success: false, message: 'Failed to retrieve movies.' });
+      res.status(500).json({ success: false, message: 'Failed to retrieve movies'});
     }
-  })
+  }) 
   
   .post(authJwtController.isAuthenticated, async (req, res) => {
     try {
