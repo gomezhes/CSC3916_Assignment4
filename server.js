@@ -84,6 +84,11 @@ router.route('/reviews')
 
   .post(authJwtController.isAuthenticated, async (req, res) => {
     try {
+      const movie = await Movie.findById(req.body.movieId);
+      if (!movie) {
+        return res.status(404).json({ success: false, message: 'Movie not found.'});
+      }
+
       const review = new Review({
           movieId: req.body.movieId,
           username: req.user.username,
@@ -158,6 +163,35 @@ router.route('/movies')
   
   .delete(authJwtController.isAuthenticated, (req, res) => {
     res.status(405).json({ success: false, message: 'DELETE request not supported on /movies.' });
+  });
+
+router.route('/movies/:id')
+  .get(authJwtController.isAuthenticated, async (req, res) => {
+    const id = req.params.id;
+    try {
+      if (req.query.reviews === 'true') {
+        const moviesWithReviews = await Movie.aggregate([
+          { $match: { _id: new mongoose.Types.ObjectId(id)}},
+          {
+            $lookup: {
+              from: 'reviews',
+              localField: '_id',
+              foreignField: 'movieId',
+              as: 'movieReviews'
+            }
+          }
+        ]);
+        if (!moviesWithReviews || moviesWithReviews.length === 0) {
+          return res.status(404).json({ success: false, message: 'Movie not found.'});
+        }
+        return res.status(200).json(moviesWithReviews);
+      }
+      const movie = await Movie.findById(id);
+      if (!movie) return res.status(404).json({ success: false, message: 'Movie not found.'});
+      res.status(200).json(movie);
+    } catch (err) {
+      res.status(500).json({ success: false, message: 'Error retrieving movie data.'});
+    }
   });
 
 app.use('/', router);
