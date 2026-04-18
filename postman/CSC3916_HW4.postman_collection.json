@@ -14,7 +14,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"username\": \"batman\",\r\n    \"password\": \"penguin\"\r\n}",
+          "raw": "{\r\n    \"username\": \"test5@fake.com\",\r\n    \"password\": \"test5\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -22,12 +22,13 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8080/signup",
-          "protocol": "http",
+          "raw": "https://csc3916-react-ehgx.onrender.com/signup",
+          "protocol": "https",
           "host": [
-            "localhost"
+            "csc3916-react-ehgx",
+            "onrender",
+            "com"
           ],
-          "port": "8080",
           "path": [
             "signup"
           ]
@@ -42,7 +43,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"username\": \"batman\",\r\n    \"password\": \"penguin\"\r\n}",
+          "raw": "{\r\n    \"username\": \"test5@fake.com\",\r\n    \"password\": \"test5\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -50,12 +51,13 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8080/signin",
-          "protocol": "http",
+          "raw": "https://csc3916-react-ehgx.onrender.com/signin",
+          "protocol": "https",
           "host": [
-            "localhost"
+            "csc3916-react-ehgx",
+            "onrender",
+            "com"
           ],
-          "port": "8080",
           "path": [
             "signin"
           ]
@@ -82,12 +84,13 @@
           "raw": "{{vault:json-web-token}}\"S"
         },
         "url": {
-          "raw": "http://localhost:8080/reviews",
-          "protocol": "http",
+          "raw": "https://csc3916-react-ehgx.onrender.com/reviews",
+          "protocol": "https",
           "host": [
-            "localhost"
+            "csc3916-react-ehgx",
+            "onrender",
+            "com"
           ],
-          "port": "8080",
           "path": [
             "reviews"
           ]
