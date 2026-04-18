@@ -5,7 +5,8 @@ const authJwtController = require('./auth_jwt'); // You're not using authControl
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const User = require('./Users');
-const Movie = require('./Movies'); // You're not using Movie, consider removing it
+const Movie = require('./Movies');
+const Review = require('./Reviews'); // You're not using Movie, consider removing it
 
 const app = express();
 app.use(cors());
@@ -66,6 +67,49 @@ router.post('/signin', async (req, res) => { // Use async/await
     res.status(500).json({ success: false, message: 'Something went wrong. Please try again later.' }); // 500 Internal Server Error
   }
 });
+
+router.route('/reviews')
+  .get(authJwtController.isAuthenticated, async (req, res) => {
+    try {
+        const reviews = await Review.find({});
+        return res.json(reviews);
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        message: 'Error retrieving reviews',
+        error: err.message
+      });
+    }
+  })
+  .post(authJwtController.isAuthenticated, async (req, res) => {
+    try {
+      const review = new Review({
+          movieId: req.body.movieId,
+          username: req.user.username,
+          review: req.body.review,
+          rating: req.body.rating
+      });
+      await review.save();
+      return res.status(201).json({
+          success: true,
+          message: 'Review created!',
+          review: review
+      });
+    } catch (err) {
+      if (err.code === 11000) {
+        return res.status(400).json({
+          success: false,
+          message: 'A review with that ID already exists'
+        });
+      }
+      return res.status(500).json({
+          success: false,
+          message: 'Error creating review',
+          error: err.message
+        });
+    }
+  })
+
 
 router.route('/movies')
   .get(authJwtController.isAuthenticated, async (req, res) => {
