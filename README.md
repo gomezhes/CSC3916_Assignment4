@@ -1,4 +1,14 @@
 # Assignment Four
+
+
+# Postman
+Collection in `/postman`
+
+<img src="https://voyager.postman.com/logo/postman-logo-orange-stacked.svg" width=100>
+
+
+
+
 ## Purpose
 The purpose of this assignment is to leverage Google’s analytics policies to gather information about the requests being sent in by users.
 
