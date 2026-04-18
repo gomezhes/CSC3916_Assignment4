@@ -90,7 +90,7 @@ router.route('/reviews')
           rating: req.body.rating
       });
       await review.save();
-      return res.status(201).json({
+      return res.status(200).json({
           success: true,
           message: 'Review created!',
           review: review
