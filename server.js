@@ -126,7 +126,7 @@ router.route('/movies')
             from: 'reviews',
             localField: '_id',
             foreignField: 'movieId',
-            as: 'reviews'
+            as: 'movieReviews'
           }
     },
     {
@@ -186,12 +186,12 @@ router.route('/movies/:id')
               from: 'reviews',
               localField: '_id',
               foreignField: 'movieId',
-              as: 'movieReviews'
+              as: 'reviews'
             }
           },
           {
             $addFields: {
-              avgRating: { $avg: 'movieReviews.rating' }``
+              avgRating: { $avg: 'reviews.rating' }``
             }
           }
         ]);
