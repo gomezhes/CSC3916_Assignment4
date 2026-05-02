@@ -211,6 +211,50 @@ router.route('/movies/:id')
     }
   });
 
+router.route('/movies/search')
+  .post(authJwtController.isAuthenticated, async (req, res) => {
+    try {
+      const searchTerm = req.body.q;
+      if (!searchTerm) {
+        return res.status(400).json({ success: false, message: 'Search term is required.' });
+      }
+
+      const regex = new RegExp(searchTerm, 'i');
+
+      const movies = await Movie.aggregate([
+        {
+          $match: {
+            $or: [
+              { title: regex },
+              { 'actors.actorName': regex }
+            ]
+          }
+        },
+        {
+          $lookup: {
+            from: 'reviews',
+            localField: '_id',
+            foreignField: 'movieId',
+            as: 'reviews'
+          }
+        },
+        {
+          $addFields: {
+            avgRating: { $avg: '$reviews.rating' }
+          }
+        },
+        {
+          $sort: { avgRating: -1 }
+        }
+      ]);
+
+      res.status(200).json(movies);
+    } catch (err) {
+      console.error("Search Error:", err);
+      res.status(500).json({ success: false, message: 'Search failed.' });
+    }
+  }); 
+
 app.use('/', router);
 
 const PORT = process.env.PORT || 8080; // Define PORT before using it
