@@ -128,7 +128,16 @@ router.route('/movies')
             foreignField: 'movieId',
             as: 'reviews'
           }
-        }]);
+    },
+    {
+      $addFields: {
+        avgRating: { $avg: '$movieReviews.rating' }
+      }
+    },
+    {
+      $sort: { avgRating: -1 }
+          }
+        ]);
         return res.status(200).json(moviesWithReviews);
       }
       const movies = await Movie.find({});
@@ -178,6 +187,11 @@ router.route('/movies/:id')
               localField: '_id',
               foreignField: 'movieId',
               as: 'movieReviews'
+            }
+          },
+          {
+            $addFields: {
+              avgRating: { $avg: 'movieReviews.rating' }``
             }
           }
         ]);
