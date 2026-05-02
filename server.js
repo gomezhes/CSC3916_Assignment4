@@ -192,19 +192,21 @@ router.route('/movies/:id')
           },
           {
             $addFields: {
-              avgRating: { $avg: 'reviews.rating' }``
+              avgRating: { $avg: '$reviews.rating' }
             }
           }
-        ]);
+        ]); 
         if (!moviesWithReviews || moviesWithReviews.length === 0) {
           return res.status(404).json({ success: false, message: 'Movie not found.'});
         }
-        return res.status(200).json(moviesWithReviews);
-      }
+        
+        return res.status(200).json(moviesWithReviews); 
+      }  
       const movie = await Movie.findById(id);
       if (!movie) return res.status(404).json({ success: false, message: 'Movie not found.'});
       res.status(200).json(movie);
     } catch (err) {
+      console.error(err);
       res.status(500).json({ success: false, message: 'Error retrieving movie data.'});
     }
   });
